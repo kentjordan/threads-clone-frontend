@@ -8,7 +8,7 @@ const App = () => {
   useEffect(() => {
     setImmediate(() => {
       // TODO: Setup authentication
-      router.replace("/home/");
+      router.replace("/home");
     });
   });
 

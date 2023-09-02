@@ -6,7 +6,18 @@ import { Image } from "expo-image";
 
 const ICON_SIZE = 20;
 
-const Thread = () => {
+interface IThread {
+  id: string;
+  profile_photo: string;
+  username: string;
+  content_text: string;
+  content_photos: string[];
+  likes_count: number;
+  replies_count: number;
+  timestamp: string;
+}
+
+const Thread = ({}: Partial<IThread>) => {
   return (
     <>
       <View style={style.threadContainer}>

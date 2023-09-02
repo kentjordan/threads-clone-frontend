@@ -3,9 +3,8 @@ import { Ionicons } from "@expo/vector-icons";
 import ProfileTabView from "~/components/profile/tab_view/tab_view";
 import { Image } from "expo-image";
 
-const ProfilePage = () => (
-  <>
-    <StatusBar backgroundColor='black' barStyle='light-content' />
+const ProfilePage = () => {
+  return (
     <View className='flex-1 bg-black'>
       {/* Lock, Instagram */}
       <View className='flex-row justify-between items-center py-2  px-2 fixed'>
@@ -74,7 +73,7 @@ const ProfilePage = () => (
         <ProfileTabView />
       </View>
     </View>
-  </>
-);
+  );
+};
 
 export default ProfilePage;

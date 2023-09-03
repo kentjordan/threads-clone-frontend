@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Pressable } from "react-native";
+import { View, Text, TextInput, Pressable, Alert } from "react-native";
 import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import { ImageBackground } from "expo-image";
@@ -6,6 +6,17 @@ import Loading from "~/components/auth/Loading";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { valLoginInput } from "~/validators/auth/login";
+import { useMutation } from "@tanstack/react-query";
+import { z } from "zod";
+import { publicAPI } from "~/api";
+import { AxiosError, AxiosResponse } from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+type FormValues = z.infer<typeof valLoginInput>;
+
+interface LoginResponse {
+  access_token: string;
+  refresh_token: string;
+}
 
 const LoginPage = () => {
   const router = useRouter();
@@ -14,9 +25,35 @@ const LoginPage = () => {
     control,
     formState: { errors },
     handleSubmit,
-  } = useForm({ resolver: zodResolver(valLoginInput) });
+  } = useForm<FormValues>({ resolver: zodResolver(valLoginInput) });
 
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, mutateAsync } = useMutation<
+    AxiosResponse<LoginResponse, any>,
+    AxiosError,
+    FormValues
+  >({
+    mutationKey: ["login"],
+    mutationFn: (data: FormValues) => publicAPI.post("/auth/login", data),
+    onError(error, variables, context) {
+      if (error.response?.status === 404) {
+        Alert.alert(
+          "Invalid credentials",
+          "Can't find your email. Please try again."
+        );
+      }
+
+      if (error.response?.status === 400) {
+        Alert.alert(
+          "Invalid credentials",
+          "Invalid password. Please try again."
+        );
+      }
+    },
+    async onSuccess({ data }) {
+      await AsyncStorage.setItem("tokens", JSON.stringify(data));
+      router.replace("/home");
+    },
+  });
 
   return (
     <ImageBackground
@@ -89,7 +126,11 @@ const LoginPage = () => {
         {isLoading ? (
           <Loading></Loading>
         ) : (
-          <Pressable className='my-2 w-full' onPress={handleSubmit(onSubmit)}>
+          <Pressable
+            className='my-2 w-full'
+            onPress={handleSubmit((data: FormValues) => {
+              mutateAsync(data);
+            })}>
             <View className='flex flex-row bg-white p-3 rounded-lg justify-center'>
               <Text className='text-black font-bold'>LOG IN</Text>
             </View>
@@ -98,10 +139,6 @@ const LoginPage = () => {
       </View>
     </ImageBackground>
   );
-};
-
-const onSubmit = (data: any) => {
-  console.log({ data });
 };
 
 export default LoginPage;

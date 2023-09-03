@@ -15,14 +15,14 @@ const WelcomePage = () => {
         <View className='absolute my-8 px-4 bottom-0 w-full flex items-center'>
           <Pressable
             className='my-2 w-full'
-            onPress={() => router.push("/login")}>
+            onPress={() => router.replace("/login")}>
             <View className='flex flex-row border-zinc-600 border bg-zinc-800 p-3 rounded-lg justify-center'>
               <Text className='text-white font-bold'>LOG IN</Text>
             </View>
           </Pressable>
           <Pressable
             className='my-2 w-full'
-            onPress={() => router.push("/signup")}>
+            onPress={() => router.replace("/signup")}>
             <View className='flex flex-row bg-white p-3 rounded-lg justify-center'>
               <Text className='text-black font-bold'>SIGN UP</Text>
             </View>

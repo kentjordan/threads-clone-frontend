@@ -7,9 +7,19 @@ import Animated, {
   FadeOutDown,
 } from "react-native-reanimated";
 import { Image } from "expo-image";
+import { Controller } from "react-hook-form";
 
-const StartThread = ({ startThreadItems, setStartThreadItem, uuid }: any) => {
+const StartThread = ({
+  startThreadItems,
+  setStartThreadItem,
+  uuid,
+  control,
+  formState,
+  unregister,
+}: any) => {
   const [isFocused, setIsFocused] = useState(true);
+
+  const CONTROLLER_CONTENT_TEXT_ID = `content_text:${uuid}`;
 
   return (
     <Animated.View
@@ -34,15 +44,27 @@ const StartThread = ({ startThreadItems, setStartThreadItem, uuid }: any) => {
       </View>
       <View className='flex-1'>
         <Text className='text-white'>kjordan_xyz</Text>
-        <TextInput
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          multiline
-          autoFocus
-          className='my-1 text-white'
-          placeholder='Start a thread...'
-          placeholderTextColor='#777'
-          selectionColor='white'></TextInput>
+        <Controller
+          name={CONTROLLER_CONTENT_TEXT_ID}
+          control={control}
+          rules={{ required: true }}
+          render={({ field: { value, onBlur, onChange } }) => {
+            return (
+              <TextInput
+                value={value}
+                onChangeText={onChange}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                multiline
+                autoFocus
+                className='my-1 text-white'
+                placeholder='Start a thread...'
+                placeholderTextColor='#777'
+                selectionColor='white'
+              />
+            );
+          }}
+        />
         {isFocused ? (
           <Animated.View
             entering={FadeInUp.duration(200)}
@@ -60,6 +82,7 @@ const StartThread = ({ startThreadItems, setStartThreadItem, uuid }: any) => {
       ) : (
         <Pressable
           onPress={() => {
+            unregister(CONTROLLER_CONTENT_TEXT_ID);
             setStartThreadItem((prev: any) =>
               prev.filter(({ id, StartThread }: any, i: any) => {
                 return id !== uuid;

@@ -2,15 +2,17 @@ import React from "react";
 import { Tabs } from "expo-router";
 import { Octicons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { StatusBar, Text, View } from "react-native";
+import { StatusBar } from "react-native";
 
 const HomePage = () => {
   return (
     <>
       <StatusBar backgroundColor='#222' barStyle='light-content' />
       <Tabs
+        initialRouteName='home'
         detachInactiveScreens
         screenOptions={{
+          unmountOnBlur: true,
           tabBarStyle: {
             backgroundColor: "black",
             borderTopWidth: 0,

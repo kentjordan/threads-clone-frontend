@@ -13,7 +13,7 @@ const AddToThread = ({ startThreadItems, setStartThreadItem }: any) => {
           { id: uuid.v4(), StartThread },
         ]);
       }}>
-      <View className='flex flex-row px-2 items-center'>
+      <View className='flex w-full flex-row px-2 items-center'>
         <View className='flex justify-center items-center mr-3 h-10 w-10'>
           <Image
             className='h-5 w-5 rounded-full opacity-50'
